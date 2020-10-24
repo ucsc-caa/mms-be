@@ -1,0 +1,13 @@
+package org.caa.mms.caa_mms;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class CaaMmsApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(CaaMmsApplication.class, args);
+	}
+
+}
