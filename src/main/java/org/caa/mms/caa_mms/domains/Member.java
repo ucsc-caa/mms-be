@@ -1,4 +1,4 @@
-package org.caa.mms.caa_mms;
+package org.caa.mms.caa_mms.domains;
 
 import javax.persistence.*;
 import lombok.AllArgsConstructor;
