@@ -2,34 +2,31 @@
 <!-- private final Logger logger = LoggerFactory.getLogger(this.getClass());
  -->
 <Configuration monitorInterval="60">
- <Properties>
- <Property name="path">logs</Property>
- </Properties>
- <Appenders>
- <Console name="Console-Appender" target="SYSTEM_OUT">
- <PatternLayout>
- <pattern>
- [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
- </pattern>
- </PatternLayout>
- </Console>
- <ApplicationInsightsAppender name="aiAppender">
- </ApplicationInsightsAppender>
- </Appenders>
- <Loggers>
- <Logger name="org.springframework.web" level="info"
- additivity="false">
- <AppenderRef ref="SpringBoot-Appender" />
- <AppenderRef ref="Console-Appender" />
- </Logger>
- <Logger name="org.caa.mms" level="info"
- additivity="false">
- <AppenderRef ref="App-Appender" />
- <AppenderRef ref="Console-Appender" />
- <AppenderRef ref="aiAppender"/>
- </Logger>
- <Root>
- <AppenderRef ref="Console-Appender" />
- </Root>
- </Loggers>
+    <Properties>
+        <Property name="path">logs</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console-Appender" target="SYSTEM_OUT">
+            <PatternLayout>
+                <pattern>
+                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+                </pattern>
+            </PatternLayout>
+        </Console>
+        <ApplicationInsightsAppender name="aiAppender"></ApplicationInsightsAppender>
+    </Appenders>
+    <Loggers>
+        <Logger name="org.springframework.web" level="info" additivity="false">
+            <AppenderRef ref="SpringBoot-Appender" />
+            <AppenderRef ref="Console-Appender" />
+        </Logger>
+        <Logger name="org.caa.mms" level="info" additivity="false">
+            <AppenderRef ref="App-Appender" />
+            <AppenderRef ref="Console-Appender" />
+            <AppenderRef ref="aiAppender"/>
+        </Logger>
+        <Root>
+            <AppenderRef ref="Console-Appender" />
+        </Root>
+    </Loggers>
 </Configuration>

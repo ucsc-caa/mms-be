@@ -1,8 +1,8 @@
-package org.caa.mms.caa_mms;
+package org.caa.mms.caa_mms.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import org.caa.mms.caa_mms.Member;
+import org.caa.mms.caa_mms.domains.Member;
 import java.util.Optional;
 
 @Repository
