@@ -19,11 +19,11 @@ import lombok.NoArgsConstructor;
 public class Staff {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
-    private String Dept;
-    private String Position;
-    private String Auth;
+    private String dept;
+    private String position;
+    private String auth;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "MemId", referencedColumnName = "id")
