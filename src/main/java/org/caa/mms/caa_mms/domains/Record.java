@@ -1,8 +1,6 @@
 package org.caa.mms.caa_mms.domains;
 
 import lombok.*;
-import org.caa.mms.caa_mms.repositories.RecordRepository;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
