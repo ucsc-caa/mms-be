@@ -64,7 +64,7 @@ public class RecordService {
 
         Optional<Staff> s = staff_repo.findById(id);
 
-        List<Record> record = recd_repo.findRecordByStaff(s.get());
+        List<Record> record = recd_repo.findByStaff(s.get());
         return record;
     }
 
@@ -73,7 +73,7 @@ public class RecordService {
 
         Optional<Member> m = memb_repo.findById(id);
 
-        List<Record> record = recd_repo.findRecordByMember(m.get());
+        List<Record> record = recd_repo.findByMember(m.get());
         return record;
     }
     /*get all the records from database*/

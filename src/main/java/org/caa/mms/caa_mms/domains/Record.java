@@ -14,7 +14,7 @@ public class Record {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "Staff_id")
     private Staff staff;
     @ManyToOne(cascade = {CascadeType.PERSIST})
@@ -23,7 +23,7 @@ public class Record {
     @Column(insertable = false, updatable = false,
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime time;
-    private String Text;
+    private String text;
 
 
 }
