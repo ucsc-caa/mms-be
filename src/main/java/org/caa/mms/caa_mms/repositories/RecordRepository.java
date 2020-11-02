@@ -11,8 +11,8 @@ import java.util.Optional;
 
 @Repository
 public interface RecordRepository extends JpaRepository<Record, Long> {
-    Optional<Record> findRecordById(Long id);
-    List<Record> findRecordByMember(Member m);
-    List<Record> findRecordByStaff(Staff s);
+    Optional<Record> findById(Long id);
+    List<Record> findByMember(Member m);
+    List<Record> findByStaff(Staff s);
 
 }
