@@ -3,46 +3,58 @@ package org.caa.mms.caa_mms.serviceTests;
 import org.caa.mms.caa_mms.domains.Member;
 import org.caa.mms.caa_mms.domains.Record;
 import org.caa.mms.caa_mms.domains.Staff;
+import org.caa.mms.caa_mms.repositories.RecordRepository;
 import org.caa.mms.caa_mms.services.RecordService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+import static org.mockito.Mockito.when;
+
+@RunWith(MockitoJUnitRunner.class)
 public class RecordServiceTest {
-    @Autowired
-    private RecordService s;
+
+    @Mock
+    RecordRepository recordRepo;
+
+    @InjectMocks
+    RecordService recordService;
+
+    private final Staff staff = new Staff();
+    private final Member member = new Member();
+    private final Long id = Long.valueOf(1);
+    private final List<Record> expectedRecord = new ArrayList<>();
+
+    public void setUpRecord() {
+        Record record = new Record();
+        record.setStaff(staff);
+        record.setMember(member);
+        record.setText("Unit testing...");
+        record.setId(id);
+        expectedRecord.add(record);
+    }
+
 
     @Test
-    public void addRecordTest() {
-        Member member = new Member();
-        Staff staff = new Staff();
-        String logInfo = "mock log in";
-        Long id = s.addRecord(staff, member, logInfo);
-        Assert.assertNotEquals(id, java.util.Optional.of(0));
+    public void testListAllRecord() {
+        setUpRecord();
+        when(recordRepo.findAll()).thenReturn(expectedRecord);
+        List<Record> actualRecord = recordService.ListAllRecord();
+        Assert.assertEquals(expectedRecord.get(0).getText(), actualRecord.get(0).getText());
     }
+
     @Test
-    public void getRecordByIdTest() {
-        Member member = new Member();
-        Staff staff = new Staff();
-        String logInfo = "mock log in";
-        Long id = s.addRecord(staff, member, logInfo);
-        Record mock_rec = s.getRecord(id).get();
-        Assert.assertEquals(id, mock_rec.getId());
+    public void testAddRecord() {
+        setUpRecord();
+        when(recordRepo.findAll()).thenReturn(expectedRecord);
+        List<Record> actualRecord = recordService.ListAllRecord();
+        Assert.assertEquals(expectedRecord.get(0).getId(), actualRecord.get(0).getId());
     }
-    @Test
-    public void getRecordByStaffIdTest() {
-        Member member = new Member();
-        Staff staff = new Staff();
-        String logInfo = "mock log in";
-        Long id = s.addRecord(staff, member, logInfo);
-        List<Record> RecordListByStaff = s.getRecordByStaffId(staff.getId());
-        Assert.assertNotEquals(0,RecordListByStaff.size());
-    }
+
 }
