@@ -12,20 +12,31 @@ import org.springframework.stereotype.Service;
 public class StaffService {
     
     @Autowired
-    private StaffRepository repo;
+    private StaffRepository staffRepository;
 
     public Optional<Staff> addStaff(Staff staff) {
-        return Optional.ofNullable(repo.save(staff));
+        staff.setId(null);
+        return Optional.ofNullable(staffRepository.save(staff));
     }
 
+    public Optional<Staff> updateStaff(Staff staff, long id) {
+        Optional<Staff> oldStaff = staffRepository.findById(id);
+        if (oldStaff.isPresent()) {
+            staff.setId(id);
+            return Optional.ofNullable(staffRepository.save(staff));
+        } else {
+            return Optional.empty();
+        }
+    }
+    
     public Optional<Staff> getStaff(long id) {
-        return repo.findById(id);
+        return staffRepository.findById(id);
     }
 
     public boolean deleteStaff(long id) {
-        Optional<Staff> staff = repo.findById(id);
+        Optional<Staff> staff = staffRepository.findById(id);
         if (staff.isPresent()) {
-            repo.delete(staff.get());
+            staffRepository.delete(staff.get());
             return true;
         } else {
             return false;
@@ -33,11 +44,11 @@ public class StaffService {
     }
 
     public List<Staff> getStaffByDept(String dept) {
-        return repo.findByDept(dept);
+        return staffRepository.findByDept(dept);
     }
 
     public List<Staff> getAll() {
-        return repo.findAll();
+        return staffRepository.findAll();
     }
 
 }
