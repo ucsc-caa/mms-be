@@ -13,19 +13,31 @@ public class MemberService {
 
 
     @Autowired
-    private MemberRepository repo;
+    private MemberRepository memberRepository;
 
     public Optional<Member> addMember(Member member){
-        return Optional.ofNullable(repo.save(member));
+        return Optional.ofNullable(memberRepository.save(member));
     }
+
+    public Optional<Member> updateMember(Member member, Long id){
+        Optional<Member> oldMember = memberRepository.findById(id);
+        if(oldMember.isPresent()){
+            member.setId(id);
+            return Optional.ofNullable(memberRepository.save(member));
+        }
+        else{
+            return Optional.empty();
+        }
+    }
+
     public Optional<Member> getMember(Long id){
-        return repo.findById(id);
+        return memberRepository.findById(id);
     }
 
     public boolean deleteMember(Long id){
-        Optional<Member> member = repo.findById(id);
+        Optional<Member> member = memberRepository.findById(id);
         if(member.isPresent()){
-            repo.delete(member.get());
+            memberRepository.delete(member.get());
             return true;
         }
         else{
@@ -33,18 +45,18 @@ public class MemberService {
         }
     }
     public Optional<Member> getMemberByEmail(String email){
-        return repo.findByEmail(email);
+        return memberRepository.findByEmail(email);
     }
     public Optional<Member> getMemberByPhone(String phone){
-        return repo.findByPhone(phone);
+        return memberRepository.findByPhone(phone);
     }
     public Optional<Member> getMemberByWechat(String wechat){
-        return repo.findByWechat(wechat);
+        return memberRepository.findByWechat(wechat);
     }
     public Optional<Member> getMemberByStdId(String stdId){
-        return repo.findByStdId(stdId);
+        return memberRepository.findByStdId(stdId);
     }
     public List<Member> getAll(){
-        return repo.findAll();
+        return memberRepository.findAll();
     }
 }
