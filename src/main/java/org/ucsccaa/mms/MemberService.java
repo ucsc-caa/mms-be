@@ -14,11 +14,11 @@ public class MemberService {
     @Autowired
     private MemberRepository memberRepository;
 
-    public Optional<Member> addMember(Member member){
+    public Optional<Member> addMember(Member member) {
         return Optional.ofNullable(memberRepository.save(member));
     }
 
-    public Optional<Member> updateMember(Member member, Long id){
+    public Optional<Member> updateMember(Member member, Long id) {
         if(id == null) {
             throw new RuntimeException("Id cannot be null");
         }
