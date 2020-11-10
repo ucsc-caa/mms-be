@@ -77,7 +77,7 @@ public class MemberService {
         return memberRepository.findByStdId(stdId);
     }
 
-    public List<Member> findAll(){
+    public List<Member> findAll() {
         return memberRepository.findAll();
     }
 }
