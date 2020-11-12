@@ -33,11 +33,11 @@ public class MemberController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteMember(@PathVariable Long id){
+    public ResponseEntity<Object> deleteMember(@PathVariable Long id) {
         boolean delete;
         try {
            delete = memberService.deleteMember(id);
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
         return delete ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
@@ -48,7 +48,7 @@ public class MemberController {
         Optional<Member> member;
         try {
             member = memberService.getMember(id);
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
         return member.isPresent() ? ResponseEntity.ok(member.get()) : ResponseEntity.notFound().build();
