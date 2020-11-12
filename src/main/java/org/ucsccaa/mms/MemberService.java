@@ -14,18 +14,16 @@ public class MemberService {
     @Autowired
     private MemberRepository memberRepository;
 
-    public Optional<Member> addMember(Member member) {
-        return Optional.ofNullable(memberRepository.save(member));
+    public Long addMember(Member member) {
+        return memberRepository.save(member).getId();
     }
 
-    public Optional<Member> updateMember(Member member, Long id) {
-        if(id == null) {
-            throw new RuntimeException("Id cannot be null");
-        }
+    public Optional<Member> updateMember(Member member) {
+        Long id = member.getId();
         Optional<Member> oldMember = memberRepository.findById(id);
         if(oldMember.isPresent()) {
             member.setId(id);
-            return Optional.ofNullable(memberRepository.save(member));
+            return Optional.of(memberRepository.save(member));
         }
         else {
             return Optional.empty();
@@ -39,14 +37,16 @@ public class MemberService {
         return memberRepository.findById(id);
     }
 
-    public void deleteMember(Long id) {
+    public Boolean deleteMember(Long id) {
         if(id == null) {
             throw new RuntimeException("invalid argument");
         }
         Optional<Member> member = memberRepository.findById(id);
         if(member.isPresent()) {
             memberRepository.deleteById(id);
+            return true;
         }
+        return false;
     }
 
     public Optional<Member> getMemberByEmail(String email) {

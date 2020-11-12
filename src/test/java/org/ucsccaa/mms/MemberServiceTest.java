@@ -18,10 +18,19 @@ public class MemberServiceTest {
 
     @Mock
     private MemberRepository memberRepository;
+
     @InjectMocks
     private MemberService memberService;
-    private final Member expectedMember = new Member(1L,"test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test");
-    private final List<Member> expectedMembers = new ArrayList(){{add(new Member(1L,"test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test"));}};
+
+    private final Member expectedMember = new Member(1L,"test","test","test","test",
+            "test","test","test","test","test","test","test",
+            "test","test","test","test","test","test","test","test",
+            "test","test","test",true);
+
+    private final List<Member> expectedMembers = new ArrayList(){{add(new Member(1L,"test","test",
+            "test","test","test","test","test","test","test","test",
+            "test","test","test","test","test","test","test","test",
+            "test","test","test","test",true));}};
 
     @Before
     public void configure() {
@@ -40,32 +49,41 @@ public class MemberServiceTest {
 
     @Test
     public void testAddMember() {
-        Long id = memberService.addMember(new Member(1L,"test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test")).get().getId();
+        Long id = memberService.addMember(new Member(1L,"test","test","test","test",
+                "test","test","test","test","test","test","test",
+                "test","test","test","test","test","test","test",
+                "test","test","test","test",true));
         Assert.assertEquals(expectedMember.getId(), id);
     }
 
     @Test(expected = RuntimeException.class)
     public void testAddMember_exception() {
         when(memberRepository.save(eq(expectedMember))).thenThrow(new RuntimeException());
-        memberService.addMember(new Member(1L,"test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test"));
+        memberService.addMember(new Member(1L,"test","test","test","test","test",
+                "test","test","test","test","test","test","test",
+                "test","test","test","test","test","test","test",
+                "test","test","test",true));
     }
 
     @Test
     public void testUpdateMember() {
-        Long expectedId = memberService.addMember(expectedMember).get().getId();
-        Long id = memberService.updateMember(expectedMember, 1L).get().getId();
+        Long expectedId = memberService.addMember(expectedMember);
+        Long id = memberService.updateMember(expectedMember).get().getId();
         Assert.assertEquals(expectedId,id);
     }
 
     @Test(expected = RuntimeException.class)
     public void testUpdateMember_invalidArgument() {
-        memberService.updateMember(new Member(1L,"test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test"), null);
+        memberService.updateMember(null);
     }
 
     @Test(expected = RuntimeException.class)
     public void testUpdateMember_exception() {
         when(memberRepository.save(eq(expectedMember))).thenThrow(new RuntimeException());
-        memberService.updateMember(new Member(1L,"test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test"), 1L);
+        memberService.updateMember(new Member(1L,"test","test","test","test","test",
+                "test","test","test","test","test","test","test",
+                "test","test","test","test","test","test","test",
+                "test","test","test",true));
     }
 
     @Test

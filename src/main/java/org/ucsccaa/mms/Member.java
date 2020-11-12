@@ -39,5 +39,5 @@ public class Member {
     private String careerStatus;
     private String company;
     private String position;
-    private String searchAuthorization;
+    private Boolean searchAuthorization;
 }
