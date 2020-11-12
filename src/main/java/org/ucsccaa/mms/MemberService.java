@@ -21,8 +21,7 @@ public class MemberService {
     public Optional<Member> updateMember(Member member) {
         Long id = member.getId();
         Optional<Member> oldMember = memberRepository.findById(id);
-        if(oldMember.isPresent()) {
-            member.setId(id);
+        if (oldMember.isPresent()) {
             return Optional.of(memberRepository.save(member));
         }
         else {
@@ -31,18 +30,18 @@ public class MemberService {
     }
 
     public Optional<Member> getMember(Long id) {
-        if(id == null) {
-            throw new RuntimeException("invalid argument");
+        if (id == null) {
+            throw new RuntimeException("argument cannot be NULL");
         }
         return memberRepository.findById(id);
     }
 
     public Boolean deleteMember(Long id) {
-        if(id == null) {
-            throw new RuntimeException("invalid argument");
+        if (id == null) {
+            throw new RuntimeException("argument cannot be NULL");
         }
         Optional<Member> member = memberRepository.findById(id);
-        if(member.isPresent()) {
+        if (member.isPresent()) {
             memberRepository.deleteById(id);
             return true;
         }
@@ -50,29 +49,29 @@ public class MemberService {
     }
 
     public Optional<Member> getMemberByEmail(String email) {
-        if(email == null) {
-            throw new RuntimeException("invalid argument");
+        if (email == null) {
+            throw new RuntimeException("argument cannot be NULL");
         }
         return memberRepository.findByEmail(email);
     }
 
     public Optional<Member> getMemberByPhone(String phone) {
-        if(phone == null) {
-            throw new RuntimeException("invalid argument");
+        if (phone == null) {
+            throw new RuntimeException("argument cannot be NULL");
         }
         return memberRepository.findByPhone(phone);
     }
 
     public Optional<Member> getMemberByWechat(String wechat) {
-        if(wechat == null) {
-            throw new RuntimeException("invalid argument");
+        if (wechat == null) {
+            throw new RuntimeException("argument cannot be NULL");
         }
         return memberRepository.findByWechat(wechat);
     }
 
     public Optional<Member> getMemberByStdId(String stdId) {
-        if(stdId == null) {
-            throw new RuntimeException("invalid argument");
+        if (stdId == null) {
+            throw new RuntimeException("argument cannot be NULL");
         }
         return memberRepository.findByStdId(stdId);
     }
