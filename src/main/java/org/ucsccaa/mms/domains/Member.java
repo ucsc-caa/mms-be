@@ -1,4 +1,4 @@
-package org.ucsccaa.mms;
+package org.ucsccaa.mms.domains;
 
 import javax.persistence.*;
 import lombok.AllArgsConstructor;

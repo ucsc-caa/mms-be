@@ -17,8 +17,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.Mockito.*;
 
-import org.ucsccaa.mms.Member;
-import org.ucsccaa.mms.MemberService;
+import org.ucsccaa.mms.controllers.MemberController;
+import org.ucsccaa.mms.domains.Member;
+import org.ucsccaa.mms.services.MemberService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,14 +36,15 @@ public class MemberControllerTest {
     @InjectMocks
     private MemberController memberController;
 
-    private final Member expectedMember = new Member(1L,"test","test","test","test","test",
-            "test","test","test","test","test","test","test","test",
-            "test","test","test","test","test","test","test","test","test",true);
+    private final Member expectedMember = new Member(1L,"test","test","test","test",
+            "test", "test","test","test","test","test","test",
+            "test","test", "test","test","test","test","test",
+            "test","test", "test","test",true);
 
-    private final List<Member> expectedMembers = new ArrayList(){{add(new Member(1L,"test","test","test",
-            "test","test","test","test","test","test","test","test",
-            "test","test","test","test","test","test","test","test",
-            "test","test","test",true));}};
+    private final List<Member> expectedMembers = new ArrayList(){{add(new Member(1L,"test","test",
+            "test", "test","test","test","test","test","test",
+            "test","test", "test","test","test","test","test",
+            "test","test","test", "test","test","test",true));}};
 
     @Before
     public void configure() {
@@ -220,7 +222,8 @@ public class MemberControllerTest {
     @Test
     public void deleteMemberTest_NotFound() throws Exception {
         when(memberService.deleteMember(1L)).thenReturn(false);
-        mockMvc.perform(MockMvcRequestBuilders.delete("/members/1")).andExpect(MockMvcResultMatchers.status().isNotFound());
+        mockMvc.perform(MockMvcRequestBuilders.delete("/members/1"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test

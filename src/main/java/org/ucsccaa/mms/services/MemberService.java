@@ -1,10 +1,10 @@
-package org.ucsccaa.mms;
+package org.ucsccaa.mms.services;
 
 import java.util.List;
 import java.util.Optional;
 
-import org.ucsccaa.mms.Member;
-import org.ucsccaa.mms.MemberRepository;
+import org.ucsccaa.mms.repositories.MemberRepository;
+import org.ucsccaa.mms.domains.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +19,13 @@ public class MemberService {
     }
 
     public Optional<Member> updateMember(Member member) {
-        Long id = member.getId();
-        Optional<Member> oldMember = memberRepository.findById(id);
-        if (oldMember.isPresent()) {
-            return Optional.of(memberRepository.save(member));
+        if (member == null || member.getId() == null){
+            throw new RuntimeException("argument cannot be NULL");
         }
-        else {
+        if (!memberRepository.existsById(member.getId())) {
             return Optional.empty();
+        } else {
+            return Optional.of(memberRepository.save(member));
         }
     }
 
@@ -40,8 +40,7 @@ public class MemberService {
         if (id == null) {
             throw new RuntimeException("argument cannot be NULL");
         }
-        Optional<Member> member = memberRepository.findById(id);
-        if (member.isPresent()) {
+        if (memberRepository.existsById(id)) {
             memberRepository.deleteById(id);
             return true;
         }

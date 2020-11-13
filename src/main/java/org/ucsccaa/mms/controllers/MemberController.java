@@ -1,8 +1,8 @@
-package org.ucsccaa.mms;
+package org.ucsccaa.mms.controllers;
 
 import org.springframework.web.bind.annotation.*;
-import org.ucsccaa.mms.MemberService;
-import org.ucsccaa.mms.Member;
+import org.ucsccaa.mms.services.MemberService;
+import org.ucsccaa.mms.domains.Member;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

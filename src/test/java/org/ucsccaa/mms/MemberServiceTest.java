@@ -1,14 +1,16 @@
 package org.ucsccaa.mms;
 
 import org.junit.Before;
-import org.ucsccaa.mms.Member;
-import org.ucsccaa.mms.MemberRepository;
+import org.ucsccaa.mms.domains.Member;
 import org.junit.Test;
 import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.ucsccaa.mms.repositories.MemberRepository;
+import org.ucsccaa.mms.services.MemberService;
+
 import java.util.List;
 import java.util.ArrayList;
 import static org.mockito.Mockito.*;
@@ -40,6 +42,7 @@ public class MemberServiceTest {
         when(memberRepository.findByPhone("test")).thenReturn(java.util.Optional.of(expectedMember));
         when(memberRepository.findByStdId("test")).thenReturn(java.util.Optional.of(expectedMember));
         when(memberRepository.findByWechat("test")).thenReturn(java.util.Optional.of(expectedMember));
+        when(memberRepository.existsById(1L)).thenReturn(true);
         when(memberRepository.findAll()).thenReturn(expectedMembers);
     }
 
