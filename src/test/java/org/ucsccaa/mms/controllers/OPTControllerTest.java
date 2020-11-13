@@ -22,7 +22,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.ucsccaa.mms.MembershipManagementSystemApplication;
+import org.ucsccaa.mms.domains.Member;
 import org.ucsccaa.mms.domains.OPT;
+import org.ucsccaa.mms.domains.Staff;
 import org.ucsccaa.mms.services.OPTService;
 
 import java.time.LocalDateTime;
@@ -39,7 +41,9 @@ public class OPTControllerTest {
     private OPTService optService;
     @InjectMocks
     private OPTController optController;
-
+    private final OPT expectOPT = new OPT(
+            (long) 1,"STATUS",new Staff(),new Member(),LocalDateTime.now(),LocalDateTime.now(),"TITLE","POSITION","TEST-CARD-ID",LocalDateTime.now(),LocalDateTime.now()
+    );
     @Before
     public void before() {
         MockitoAnnotations.initMocks(this);
@@ -48,92 +52,90 @@ public class OPTControllerTest {
 
     @Test
     public void createOPTTest() throws Exception {
-        OPT optExpect = new OPT();
-        optExpect.setId((long) 1);
-        optExpect.setStatus("STATUS");
-        optExpect.setCardNumber("TEST-CARD-ID");
-
-        when(optService.createOPT(any())).thenReturn(optExpect.getId());
-        String json = objectMapper.writeValueAsString(optExpect);
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/OPTs")
+        when(optService.createOPT(any())).thenReturn(expectOPT.getId());
+        String json = objectMapper.writeValueAsString(expectOPT);
+        mockMvc.perform(MockMvcRequestBuilders.post("/opts")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print())
-                .andReturn();
-        Assert.assertEquals(result.getResponse().getHeader("Location"), "http://localhost/OPTs/" + optExpect.getId().toString());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.payload").value("http://localhost/opts/" + expectOPT.getId().toString()));
     }
 
     @Test
     public void createEmptyBodyTest() throws Exception {
         doThrow(new IllegalArgumentException("OPT can't be NULL")).when(optService).createOPT(any());
-        mockMvc.perform(MockMvcRequestBuilders.post("/OPTs")
+        mockMvc.perform(MockMvcRequestBuilders.post("/opts")
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
     public void getOPTByIDTest() throws Exception {
-        OPT optExpect = new OPT();
-        optExpect.setId((long) 1);
-        optExpect.setStatus("STATUS");
-        optExpect.setCardNumber("TEST-CARD-ID");
-        when(optService.findOPTByID(any())).thenReturn(Optional.of(optExpect));
-        mockMvc.perform(MockMvcRequestBuilders.get("/OPTs/" + optExpect.getId().toString()))
-                .andExpect(ResultMatcher.matchAll(MockMvcResultMatchers.jsonPath("$.cardNumber").value(optExpect.getCardNumber()),
-                        MockMvcResultMatchers.jsonPath("$.id").value(optExpect.getId()),
-                        MockMvcResultMatchers.jsonPath("$.status").value(optExpect.getStatus()),
+        when(optService.findOPTByID(any())).thenReturn(Optional.of(expectOPT));
+        mockMvc.perform(MockMvcRequestBuilders.get("/opts/" + expectOPT.getId().toString()))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(ResultMatcher.matchAll(MockMvcResultMatchers.jsonPath("$.payload.cardNumber").value(expectOPT.getCardNumber()),
+                        MockMvcResultMatchers.jsonPath("$.payload.id").value(expectOPT.getId()),
+                        MockMvcResultMatchers.jsonPath("$.payload.status").value(expectOPT.getStatus()),
                         MockMvcResultMatchers.status().isOk()));
     }
 
     @Test
     public void getOPTByIDNoFoundTest() throws Exception {
         when(optService.findOPTByID(any())).thenReturn(Optional.empty());
-        mockMvc.perform(MockMvcRequestBuilders.get("/OPTs/1")).andExpect(MockMvcResultMatchers.status().isNotFound());
+        mockMvc.perform(MockMvcRequestBuilders.get("/opts/1"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(ResultMatcher.matchAll(
+                        MockMvcResultMatchers.jsonPath("$.status").value("NOT_FOUND")
+                ));
     }
 
     @Test
     public void updateOPTByIDTest() throws Exception {
-        OPT optExpect = new OPT();
-        optExpect.setId((long) 1);
-        optExpect.setStatus("STATUS");
-        optExpect.setEndDate(LocalDateTime.now());
-        optExpect.setCardNumber("TEST-CARD-ID");
-        String json = objectMapper.writeValueAsString(optExpect);
+        String json = objectMapper.writeValueAsString(expectOPT);
         System.out.println(json);
-        when(optService.updateOPTByID(any())).thenReturn(Optional.of(optExpect));
-        mockMvc.perform(MockMvcRequestBuilders.put("/OPTs/" + optExpect.getId().toString())
+        when(optService.updateOPTByID(any())).thenReturn(Optional.of(expectOPT));
+        mockMvc.perform(MockMvcRequestBuilders.put("/opts")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect(ResultMatcher.matchAll(
                         MockMvcResultMatchers.status().isOk(),
-                        MockMvcResultMatchers.jsonPath("$.status").value("STATUS"),
-                        MockMvcResultMatchers.jsonPath("$.cardNumber").value("TEST-CARD-ID")
+                        MockMvcResultMatchers.jsonPath("$.payload.status").value("STATUS"),
+                        MockMvcResultMatchers.jsonPath("$.payload.cardNumber").value("TEST-CARD-ID")
                 ));
     }
 
     @Test
     public void updateOPTNotFoundTest() throws Exception {
-        OPT optExpect = new OPT();
-        optExpect.setId((long) 1);
-        optExpect.setStatus("STATUS");
-        optExpect.setEndDate(LocalDateTime.now());
-        optExpect.setCardNumber("TEST-CARD-ID");
-        String json = objectMapper.writeValueAsString(optExpect);
+        String json = objectMapper.writeValueAsString(expectOPT);
         System.out.println(json);
         when(optService.updateOPTByID(any())).thenReturn(Optional.empty());
-        mockMvc.perform(MockMvcRequestBuilders.put("/OPTs/1").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(MockMvcResultMatchers.status().isNotFound());
+        mockMvc.perform(MockMvcRequestBuilders.put("/opts").contentType(MediaType.APPLICATION_JSON).content(json))
+                .andExpect(ResultMatcher.matchAll(
+                        MockMvcResultMatchers.status().isOk(),
+                        MockMvcResultMatchers.jsonPath("$.status").value("NOT_FOUND")
+                ));
 
     }
 
     @Test
     public void deleteByIDTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/OPTs/1")).andExpect(MockMvcResultMatchers.status().isNoContent());
+        mockMvc.perform(MockMvcRequestBuilders.delete("/opts/1"))
+                .andExpect(ResultMatcher.matchAll(
+                        MockMvcResultMatchers.status().isOk(),
+                        MockMvcResultMatchers.jsonPath("$.status").value("SUCCESS")
+                ));
     }
 
     @Test
     public void deleteByIDNotFoundTest() throws Exception {
         doThrow(new EmptyResultDataAccessException(0)).when(optService).deleteOPT(any());
-        mockMvc.perform(MockMvcRequestBuilders.delete("/OPTs/1")).andExpect(MockMvcResultMatchers.status().isNotFound());
+        mockMvc.perform(MockMvcRequestBuilders.delete("/opts/1"))
+                .andExpect(ResultMatcher.matchAll(
+                        MockMvcResultMatchers.status().isOk(),
+                        MockMvcResultMatchers.jsonPath("$.status").value("NOT_FOUND")
+                ));
     }
 
 }

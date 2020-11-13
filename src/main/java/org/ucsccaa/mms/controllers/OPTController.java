@@ -8,6 +8,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.ucsccaa.mms.domains.OPT;
+import org.ucsccaa.mms.models.ServiceResponse;
+import org.ucsccaa.mms.models.Status;
 import org.ucsccaa.mms.services.OPTService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,52 +20,56 @@ import java.util.Optional;
 
 @Api(tags = "OPT RESTFUL API")
 @RestController
-@RequestMapping(value = "/OPTs", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/opts", produces = MediaType.APPLICATION_JSON_VALUE)
 public class OPTController {
     @Autowired
     private OPTService optService;
 
     @ApiOperation("create new OPT")
     @PostMapping
-    public ResponseEntity<OPT> addOPT(@RequestBody OPT opt, HttpServletRequest req) throws URISyntaxException {
+    public ServiceResponse<URI> addOPT(@RequestBody OPT opt, HttpServletRequest req) throws URISyntaxException {
         try {
             Long id = optService.createOPT(opt);
-            return ResponseEntity.created(new URI(req.getRequestURL() + "/" + id)).build();
+            return new ServiceResponse<>(new URI(req.getRequestURL() + "/" + id));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
+            return new ServiceResponse<>(Status.ERROR, "Bad Request");
         }
     }
 
     @ApiOperation("get OPT by ID")
     @GetMapping("/{id}")
-    public ResponseEntity<OPT> getUserByID(@PathVariable Long id) {
+    public ServiceResponse<OPT> getUserByID(@PathVariable Long id) {
         Optional<OPT> opt = optService.findOPTByID(id);
-        return opt.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return opt.map((ServiceResponse::new)).orElseGet(() -> new ServiceResponse<>(Status.NOT_FOUND, "NO USER FOUND"));
     }
 
     @ApiOperation("update OPT by ID")
-    @PutMapping("/{id}")
-    public ResponseEntity<OPT> updateUserByID(@PathVariable Long id, @RequestBody OPT opt) {
-        opt.setId(id);
-        Optional<OPT> optionalOPT = optService.updateOPTByID(opt);
-        return optionalOPT.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    @PutMapping
+    public ServiceResponse<OPT> updateUserByID(@RequestBody OPT opt) {
+        Optional<OPT> optionalOPT;
+        try {
+            optionalOPT = optService.updateOPTByID(opt);
+        } catch (IllegalArgumentException e) {
+           return new ServiceResponse<>(Status.ERROR,"BAD REQUEST NO ID");
+        }
+        return optionalOPT.map(ServiceResponse::new).orElseGet(() -> new ServiceResponse<>(Status.NOT_FOUND,"NO OPT FOUND"));
     }
 
     @ApiOperation("delete OPT by ID")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteUserByID(@PathVariable Long id) {
+    public ServiceResponse<Object> deleteUserByID(@PathVariable Long id) {
         try {
             optService.deleteOPT(id);
         } catch (EmptyResultDataAccessException e) {
-            return ResponseEntity.notFound().build();
+            return new ServiceResponse<>(Status.NOT_FOUND,"NO USER FOUND");
         }
-        return ResponseEntity.noContent().build();
+        return new ServiceResponse<>(Status.SUCCESS);
     }
 
     @ApiOperation("list all OPTs")
     @GetMapping
-    public ResponseEntity<Object> listAll(){
+    public ServiceResponse<List<OPT>> listAll(){
         List<OPT> OPTAll = optService.listAll();
-        return ResponseEntity.ok().body(OPTAll);
+        return new ServiceResponse<>(OPTAll);
     }
 }
