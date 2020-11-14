@@ -22,7 +22,12 @@ public class MemberController {
 
     @PostMapping
     public ResponseEntity<Object> addMember(@RequestBody Member member, HttpServletRequest req) throws URISyntaxException {
-        Long id = memberService.addMember(member);
+        Long id;
+        try {
+            id = memberService.addMember(member);
+        } catch (Exception e) {
+            return ResponseEntity.status(409).build();
+        }
         return ResponseEntity.created(new URI(req.getRequestURI() + id)).build();
     }
 

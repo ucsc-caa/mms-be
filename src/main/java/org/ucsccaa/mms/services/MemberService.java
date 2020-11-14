@@ -3,6 +3,7 @@ package org.ucsccaa.mms.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Example;
 import org.ucsccaa.mms.repositories.MemberRepository;
 import org.ucsccaa.mms.domains.Member;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,12 @@ public class MemberService {
     private MemberRepository memberRepository;
 
     public Long addMember(Member member) {
+        if (member == null){
+            throw new RuntimeException("argument cannot be NULL");
+        }
+        if (memberRepository.exists(Example.of(member))) {
+            throw new RuntimeException("member already exists");
+        }
         return memberRepository.save(member).getId();
     }
 
@@ -22,10 +29,10 @@ public class MemberService {
         if (member == null || member.getId() == null){
             throw new RuntimeException("argument cannot be NULL");
         }
-        if (!memberRepository.existsById(member.getId())) {
-            return Optional.empty();
-        } else {
+        if (memberRepository.existsById(member.getId())) {
             return Optional.of(memberRepository.save(member));
+        } else {
+            return Optional.empty();
         }
     }
 

@@ -13,6 +13,8 @@ import org.ucsccaa.mms.services.MemberService;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Optional;
+
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -42,7 +44,6 @@ public class MemberServiceTest {
         when(memberRepository.findByPhone("test")).thenReturn(java.util.Optional.of(expectedMember));
         when(memberRepository.findByStdId("test")).thenReturn(java.util.Optional.of(expectedMember));
         when(memberRepository.findByWechat("test")).thenReturn(java.util.Optional.of(expectedMember));
-        when(memberRepository.existsById(1L)).thenReturn(true);
         when(memberRepository.findAll()).thenReturn(expectedMembers);
     }
 
@@ -70,9 +71,9 @@ public class MemberServiceTest {
 
     @Test
     public void testUpdateMember() {
-        Long expectedId = memberService.addMember(expectedMember);
+        when(memberRepository.existsById(1L)).thenReturn(true);
         Long id = memberService.updateMember(expectedMember).get().getId();
-        Assert.assertEquals(expectedId,id);
+        Assert.assertEquals(Optional.of(1L), Optional.of(id));
     }
 
     @Test(expected = RuntimeException.class)
@@ -82,6 +83,7 @@ public class MemberServiceTest {
 
     @Test(expected = RuntimeException.class)
     public void testUpdateMember_exception() {
+        when(memberRepository.existsById(1L)).thenReturn(true);
         when(memberRepository.save(eq(expectedMember))).thenThrow(new RuntimeException());
         memberService.updateMember(new Member(1L,"test","test","test","test","test",
                 "test","test","test","test","test","test","test",
@@ -188,6 +190,7 @@ public class MemberServiceTest {
 
     @Test
     public void testDeleteMember() {
+        when(memberRepository.existsById(1L)).thenReturn(true);
         memberService.deleteMember(1L);
         verify(memberRepository, times(1)).deleteById(1L);
     }
