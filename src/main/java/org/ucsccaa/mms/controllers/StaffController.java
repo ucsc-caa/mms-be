@@ -28,7 +28,7 @@ public class StaffController {
     private StaffService service;
 
     @PostMapping
-    private ServiceResponse<URI> addStaff(@RequestBody Staff staff, HttpServletRequest req) throws URISyntaxException {
+    public ServiceResponse<URI> addStaff(@RequestBody Staff staff, HttpServletRequest req) throws URISyntaxException {
         try {
             Long id = service.addStaff(staff);
             return new ServiceResponse<>(new URI(req.getRequestURL() + "/" + id));
@@ -38,7 +38,7 @@ public class StaffController {
     }
 
     @PutMapping
-    private ServiceResponse<Staff> updateStaff(@RequestBody Staff staff) {
+    public ServiceResponse<Staff> updateStaff(@RequestBody Staff staff) {
         Staff updatedStaff = null;
         try {
             updatedStaff = service.updateStaff(staff);
@@ -57,7 +57,6 @@ public class StaffController {
             staff = service.getStaff(id);
             if (staff == null)
                 return new ServiceResponse<>(Status.NOT_FOUND, "ID NOT FOUND");
-            System.out.println(staff.getId());
         } catch (Exception e) {
             return new ServiceResponse<>(Status.ERROR, e.getMessage());
         }

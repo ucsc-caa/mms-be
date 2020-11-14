@@ -46,7 +46,7 @@ public class StaffServiceTest {
         expectedStaff.setPosition("admin");
         expectedStaff.setMember(new Member());
 
-        when(repository.findById(anyLong())).thenReturn(Optional.of(expectedStaff));
+        when(repository.existsById(anyLong())).thenReturn(true);
         when(repository.save(any())).thenReturn(expectedStaff);
         Staff staff = service.updateStaff(expectedStaff);
         Assert.assertNotNull(staff);
@@ -57,7 +57,6 @@ public class StaffServiceTest {
 
     @Test
     public void updateStaffNotFoundTest() {
-        when(repository.findById(anyLong())).thenReturn(null);
         Staff staff = service.updateStaff(new Staff());
         Assert.assertEquals(null, staff);
     }

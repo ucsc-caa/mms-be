@@ -23,20 +23,14 @@ public class StaffService {
     public Staff updateStaff(Staff staff) {
         if (staff == null) 
             throw new RuntimeException("STAFF CANNOT BE NULL");
-        Optional<Staff> oldStaff = repo.findById(staff.getId());
-        if (oldStaff.isEmpty()) {
-            return null;
-        }
-        return repo.save(staff);
+        return repo.existsById(staff.getId()) ? repo.save(staff) : null;
     }
 
     public Staff getStaff(Long id) {
         if (id == null) 
             throw new RuntimeException("ID CANNOT BE NULL");
         Optional<Staff> staff = repo.findById(id);
-        if (staff.isEmpty())
-            return null;
-        return staff.get();
+        return staff.isEmpty() ? null : staff.get();
     }
 
     public List<Staff> getStaffByDept(String dept) {
