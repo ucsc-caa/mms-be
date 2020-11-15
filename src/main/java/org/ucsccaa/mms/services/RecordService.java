@@ -64,7 +64,7 @@ public class RecordService {
             List<Record> record = recordRepo.findByMember(member.get());
             return record;
         } else {
-            throw new RuntimeException("Invalid argument(staff is null)");
+            throw new RuntimeException("Invalid argument(member is null)");
         }
     }
 
@@ -73,12 +73,7 @@ public class RecordService {
      * @return List of Record
      */
     public List<Record> ListAllRecord() {
-        List<Record> recordList = recordRepo.findAll();
-        if (!recordList.isEmpty()) {
-            return recordList;
-        } else {
-            throw new RuntimeException("Empty List");
-        }
+        return recordRepo.findAll();
     }
 
 }
