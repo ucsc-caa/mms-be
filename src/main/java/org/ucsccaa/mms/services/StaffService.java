@@ -30,7 +30,7 @@ public class StaffService {
         if (id == null) 
             throw new RuntimeException("ID CANNOT BE NULL");
         Optional<Staff> staff = repo.findById(id);
-        return staff.isEmpty() ? null : staff.get();
+        return staff.isPresent() ? null : staff.get();
     }
 
     public List<Staff> getStaffByDept(String dept) {
