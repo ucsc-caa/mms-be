@@ -1,11 +1,11 @@
-package org.ucsccaa.mms;
+package org.ucsccaa.mms.controllers;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -41,10 +41,7 @@ public class MemberControllerTest {
             "test","test", "test","test","test","test","test",
             "test","test", "test","test",true);
 
-    private final List<Member> expectedMembers = new ArrayList(){{add(new Member(1L,"test","test",
-            "test", "test","test","test","test","test","test",
-            "test","test", "test","test","test","test","test",
-            "test","test","test", "test","test","test",true));}};
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Before
     public void configure() {
@@ -55,10 +52,11 @@ public class MemberControllerTest {
 
     @Test
     public void addMemberTest() throws Exception {
+        String json = objectMapper.writeValueAsString(expectedMember);
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
                 .post("/members")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"test\"}");
+                .content(json);
 
         mockMvc.perform(builder)
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
@@ -75,28 +73,30 @@ public class MemberControllerTest {
 
     @Test
     public void updateMemberTest() throws Exception {
+        String json = objectMapper.writeValueAsString(expectedMember);
         when(memberService.updateMember(any())).thenReturn(Optional.of(expectedMember));
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
                 .put("/members")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"test\"}");
+                .content(json);
 
         mockMvc.perform(builder)
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(expectedMember.getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(expectedMember.getName()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.payload.id").value(expectedMember.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.payload.name").value(expectedMember.getName()));
     }
 
     @Test
     public void updateMemberTest_NotFound() throws Exception {
+        String json = objectMapper.writeValueAsString(expectedMember);
         when(memberService.updateMember(any())).thenReturn(Optional.empty());
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
                 .put("/members")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"test\"}");
+                .content(json);
 
         mockMvc.perform(builder)
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("NOT_FOUND"));
     }
 
     @Test
@@ -107,8 +107,8 @@ public class MemberControllerTest {
 
         mockMvc.perform(builder)
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(expectedMember.getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(expectedMember.getName()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.payload.id").value(expectedMember.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.payload.name").value(expectedMember.getName()));
     }
 
     @Test
@@ -118,7 +118,7 @@ public class MemberControllerTest {
                 .get("/members/id/1");
 
         mockMvc.perform(builder)
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("NOT_FOUND"));
     }
 
     @Test
@@ -129,8 +129,8 @@ public class MemberControllerTest {
 
         mockMvc.perform(builder)
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(expectedMember.getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(expectedMember.getName()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.payload.id").value(expectedMember.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.payload.name").value(expectedMember.getName()));
     }
 
     @Test
@@ -140,7 +140,7 @@ public class MemberControllerTest {
                 .get("/members/email/test");
 
         mockMvc.perform(builder)
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("NOT_FOUND"));
     }
 
     @Test
@@ -151,8 +151,8 @@ public class MemberControllerTest {
 
         mockMvc.perform(builder)
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(expectedMember.getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(expectedMember.getName()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.payload.id").value(expectedMember.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.payload.name").value(expectedMember.getName()));
     }
 
     @Test
@@ -162,7 +162,7 @@ public class MemberControllerTest {
                 .get("/members/phone/test");
 
         mockMvc.perform(builder)
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("NOT_FOUND"));
     }
 
     @Test
@@ -173,8 +173,8 @@ public class MemberControllerTest {
 
         mockMvc.perform(builder)
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(expectedMember.getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(expectedMember.getName()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.payload.id").value(expectedMember.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.payload.name").value(expectedMember.getName()));
     }
 
     @Test
@@ -184,7 +184,7 @@ public class MemberControllerTest {
                 .get("/members/wechat/test");
 
         mockMvc.perform(builder)
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("NOT_FOUND"));
     }
 
     @Test
@@ -195,8 +195,8 @@ public class MemberControllerTest {
 
         mockMvc.perform(builder)
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(expectedMember.getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(expectedMember.getName()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.payload.id").value(expectedMember.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.payload.name").value(expectedMember.getName()));
     }
 
     @Test
@@ -206,7 +206,7 @@ public class MemberControllerTest {
                 .get("/members/stdid/test");
 
         mockMvc.perform(builder)
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("NOT_FOUND"));
     }
 
     @Test
@@ -216,23 +216,23 @@ public class MemberControllerTest {
                 .delete("/members/1");
 
         mockMvc.perform(builder)
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("SUCCESS"));
     }
 
     @Test
     public void deleteMemberTest_NotFound() throws Exception {
         when(memberService.deleteMember(1L)).thenReturn(false);
         mockMvc.perform(MockMvcRequestBuilders.delete("/members/1"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("NOT_FOUND"));
     }
 
     @Test
     public void getAllTest() throws Exception {
-        when(memberService.findAll()).thenReturn(expectedMembers);
+        List<Member> expectedList = new ArrayList<>();
+        when(memberService.findAll()).thenReturn(expectedList);
         mockMvc.perform(MockMvcRequestBuilders.get("/members/"))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(expectedMembers.get(0).getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(expectedMembers.get(0).getName()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.payload").value(expectedList));
 
     }
 

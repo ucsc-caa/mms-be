@@ -1,6 +1,8 @@
 package org.ucsccaa.mms.controllers;
 
 import org.springframework.web.bind.annotation.*;
+import org.ucsccaa.mms.models.ServiceResponse;
+import org.ucsccaa.mms.models.Status;
 import org.ucsccaa.mms.services.MemberService;
 import org.ucsccaa.mms.domains.Member;
 
@@ -21,90 +23,95 @@ public class MemberController {
     private MemberService memberService;
 
     @PostMapping
-    public ResponseEntity<Object> addMember(@RequestBody Member member, HttpServletRequest req) throws URISyntaxException {
+    public ServiceResponse<URI> addMember(@RequestBody Member member, HttpServletRequest req) throws URISyntaxException {
         Long id;
         try {
             id = memberService.addMember(member);
         } catch (Exception e) {
-            return ResponseEntity.status(409).build();
+            return new ServiceResponse<>(Status.ERROR, e.getMessage());
         }
-        return ResponseEntity.created(new URI(req.getRequestURI() + id)).build();
+        return new ServiceResponse<>(new URI(req.getRequestURI() + id));
     }
 
     @PutMapping
-    public ResponseEntity<Member> updateMember(@RequestBody Member member) throws URISyntaxException {
-        Optional<Member> newMember = memberService.updateMember(member);
-        return newMember.isPresent() ? ResponseEntity.ok(newMember.get()) : ResponseEntity.notFound().build();
+    public ServiceResponse<Member> updateMember(@RequestBody Member member) throws URISyntaxException {
+        Optional<Member> newMember;
+        try {
+            newMember = memberService.updateMember(member);
+        } catch (Exception e) {
+            return new ServiceResponse<>(Status.ERROR, e.getMessage());
+        }
+        return newMember.isPresent() ? new ServiceResponse<>(newMember.get()) : new ServiceResponse<>(Status.NOT_FOUND, "MEMBER NOT FOUND");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteMember(@PathVariable Long id) {
+    public ServiceResponse<Object> deleteMember(@PathVariable Long id) {
         boolean delete;
         try {
            delete = memberService.deleteMember(id);
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return new ServiceResponse<>(Status.ERROR, e.getMessage());
         }
-        return delete ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+        return delete ? new ServiceResponse<>() : new ServiceResponse<>(Status.NOT_FOUND, "ID NOT FOUND");
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<Member> getMember(@PathVariable("id") Long id) {
+    public ServiceResponse<Optional<Member>> getMember(@PathVariable("id") Long id) {
         Optional<Member> member;
         try {
             member = memberService.getMember(id);
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return new ServiceResponse<>(Status.ERROR, e.getMessage());
         }
-        return member.isPresent() ? ResponseEntity.ok(member.get()) : ResponseEntity.notFound().build();
+        return member.isPresent() ? new ServiceResponse<Optional<Member>>(member) : new ServiceResponse<>(Status.NOT_FOUND, "ID NOT FOUND");
     }
 
     @GetMapping("/email/{email}")
-    public ResponseEntity<Member> getMemberByEmail(@PathVariable("email") String email) {
+    public ServiceResponse<Optional<Member>> getMemberByEmail(@PathVariable("email") String email) {
         Optional<Member> member;
         try {
             member = memberService.getMemberByEmail(email);
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return new ServiceResponse<>(Status.ERROR, e.getMessage());
         }
-        return member.isPresent() ? ResponseEntity.ok(member.get()) : ResponseEntity.notFound().build();
+        return member.isPresent() ? new ServiceResponse<Optional<Member>>(member) : new ServiceResponse<>(Status.NOT_FOUND, "ID NOT FOUND");
     }
 
     @GetMapping("/phone/{phone}")
-    public ResponseEntity<Member> getMemberByPhone(@PathVariable("phone") String phone) {
+    public ServiceResponse<Optional<Member>> getMemberByPhone(@PathVariable("phone") String phone) {
         Optional<Member> member;
         try {
             member = memberService.getMemberByPhone(phone);
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return new ServiceResponse<>(Status.ERROR, e.getMessage());
         }
-        return member.isPresent() ? ResponseEntity.ok(member.get()) : ResponseEntity.notFound().build();
+        return member.isPresent() ? new ServiceResponse<Optional<Member>>(member) : new ServiceResponse<>(Status.NOT_FOUND, "ID NOT FOUND");
     }
 
     @GetMapping("/wechat/{wechat}")
-    public ResponseEntity<Member> getMemberByWechat(@PathVariable("wechat") String wechat) {
+    public ServiceResponse<Optional<Member>> getMemberByWechat(@PathVariable("wechat") String wechat) {
         Optional<Member> member;
         try {
             member = memberService.getMemberByWechat(wechat);
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return new ServiceResponse<>(Status.ERROR, e.getMessage());
         }
-        return member.isPresent() ? ResponseEntity.ok(member.get()) : ResponseEntity.notFound().build();
+        return member.isPresent() ? new ServiceResponse<Optional<Member>>(member) : new ServiceResponse<>(Status.NOT_FOUND, "ID NOT FOUND");
     }
 
     @GetMapping("/stdid/{stdid}")
-    public ResponseEntity<Member> getMemberByStdId(@PathVariable("stdid") String stdId) {
+    public ServiceResponse<Optional<Member>> getMemberByStdId(@PathVariable("stdid") String stdId) {
         Optional<Member> member;
         try {
             member = memberService.getMemberByStdId(stdId);
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return new ServiceResponse<>(Status.ERROR, e.getMessage());
         }
-        return member.isPresent() ? ResponseEntity.ok(member.get()) : ResponseEntity.notFound().build();
+        return member.isPresent() ? new ServiceResponse<Optional<Member>>(member) : new ServiceResponse<>(Status.NOT_FOUND, "ID NOT FOUND");
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<Member>> getAll() {
-        return ResponseEntity.ok(memberService.findAll());
+    public ServiceResponse<List<Member>> getAll() {
+        return new ServiceResponse<>(memberService.findAll());
     }
 }
