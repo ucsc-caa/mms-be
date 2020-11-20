@@ -59,7 +59,9 @@ public class MemberControllerTest {
                 .content(json);
 
         mockMvc.perform(builder)
-                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
+                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.payload")
+                        .value("/members/" + expectedMember.getId()));
     }
 
     @Test
@@ -68,7 +70,7 @@ public class MemberControllerTest {
                 .post("/members");
 
         mockMvc.perform(builder)
-                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test

@@ -27,10 +27,10 @@ public class MemberController {
         Long id;
         try {
             id = memberService.addMember(member);
+            return new ServiceResponse<>(new URI(req.getRequestURI() + "/" + id));
         } catch (Exception e) {
             return new ServiceResponse<>(Status.ERROR, e.getMessage());
         }
-        return new ServiceResponse<>(new URI(req.getRequestURI() + id));
     }
 
     @PutMapping
@@ -38,10 +38,13 @@ public class MemberController {
         Optional<Member> newMember;
         try {
             newMember = memberService.updateMember(member);
+            if (!newMember.isPresent()) {
+                return new ServiceResponse<>(Status.NOT_FOUND, "MEMBER NOT FOUND");
+            }
         } catch (Exception e) {
             return new ServiceResponse<>(Status.ERROR, e.getMessage());
         }
-        return newMember.isPresent() ? new ServiceResponse<>(newMember.get()) : new ServiceResponse<>(Status.NOT_FOUND, "MEMBER NOT FOUND");
+        return new ServiceResponse<>(newMember.get());
     }
 
     @DeleteMapping("/{id}")
@@ -49,10 +52,13 @@ public class MemberController {
         boolean delete;
         try {
            delete = memberService.deleteMember(id);
+           if (!delete) {
+               return new ServiceResponse<>(Status.NOT_FOUND, "ID NOT FOUND");
+           }
         } catch (Exception e) {
             return new ServiceResponse<>(Status.ERROR, e.getMessage());
         }
-        return delete ? new ServiceResponse<>() : new ServiceResponse<>(Status.NOT_FOUND, "ID NOT FOUND");
+        return new ServiceResponse<>();
     }
 
     @GetMapping("/id/{id}")
@@ -60,10 +66,13 @@ public class MemberController {
         Optional<Member> member;
         try {
             member = memberService.getMember(id);
+            if (!member.isPresent()) {
+                return new ServiceResponse<>(Status.NOT_FOUND, "ID NOT FOUND");
+            }
         } catch (Exception e) {
             return new ServiceResponse<>(Status.ERROR, e.getMessage());
         }
-        return member.isPresent() ? new ServiceResponse<Optional<Member>>(member) : new ServiceResponse<>(Status.NOT_FOUND, "ID NOT FOUND");
+        return new ServiceResponse<Optional<Member>>(member);
     }
 
     @GetMapping("/email/{email}")
@@ -71,10 +80,13 @@ public class MemberController {
         Optional<Member> member;
         try {
             member = memberService.getMemberByEmail(email);
+            if (!member.isPresent()) {
+                return new ServiceResponse<>(Status.NOT_FOUND, "ID NOT FOUND");
+            }
         } catch (Exception e) {
             return new ServiceResponse<>(Status.ERROR, e.getMessage());
         }
-        return member.isPresent() ? new ServiceResponse<Optional<Member>>(member) : new ServiceResponse<>(Status.NOT_FOUND, "ID NOT FOUND");
+        return new ServiceResponse<Optional<Member>>(member);
     }
 
     @GetMapping("/phone/{phone}")
@@ -82,10 +94,13 @@ public class MemberController {
         Optional<Member> member;
         try {
             member = memberService.getMemberByPhone(phone);
+            if (!member.isPresent()) {
+                return new ServiceResponse<>(Status.NOT_FOUND, "ID NOT FOUND");
+            }
         } catch (Exception e) {
             return new ServiceResponse<>(Status.ERROR, e.getMessage());
         }
-        return member.isPresent() ? new ServiceResponse<Optional<Member>>(member) : new ServiceResponse<>(Status.NOT_FOUND, "ID NOT FOUND");
+        return new ServiceResponse<Optional<Member>>(member);
     }
 
     @GetMapping("/wechat/{wechat}")
@@ -93,10 +108,13 @@ public class MemberController {
         Optional<Member> member;
         try {
             member = memberService.getMemberByWechat(wechat);
+            if (!member.isPresent()) {
+                return new ServiceResponse<>(Status.NOT_FOUND, "ID NOT FOUND");
+            }
         } catch (Exception e) {
             return new ServiceResponse<>(Status.ERROR, e.getMessage());
         }
-        return member.isPresent() ? new ServiceResponse<Optional<Member>>(member) : new ServiceResponse<>(Status.NOT_FOUND, "ID NOT FOUND");
+        return new ServiceResponse<Optional<Member>>(member);
     }
 
     @GetMapping("/stdid/{stdid}")
@@ -104,10 +122,13 @@ public class MemberController {
         Optional<Member> member;
         try {
             member = memberService.getMemberByStdId(stdId);
+            if (!member.isPresent()) {
+                return new ServiceResponse<>(Status.NOT_FOUND, "ID NOT FOUND");
+            }
         } catch (Exception e) {
             return new ServiceResponse<>(Status.ERROR, e.getMessage());
         }
-        return member.isPresent() ? new ServiceResponse<Optional<Member>>(member) : new ServiceResponse<>(Status.NOT_FOUND, "ID NOT FOUND");
+        return new ServiceResponse<Optional<Member>>(member);
     }
 
     @GetMapping("/")
