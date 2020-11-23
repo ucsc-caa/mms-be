@@ -1,5 +1,6 @@
 package org.ucsccaa.mms.controllers;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 import org.ucsccaa.mms.models.ServiceResponse;
@@ -16,6 +17,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
+@Api(value = "MEMBER RESTFUL API")
 @RestController
 @RequestMapping("/members")
 public class MemberController {
@@ -23,7 +25,7 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
-    @ApiOperation("create new member")
+    @ApiOperation(value = "create new member")
     @PostMapping
     public ServiceResponse<URI> addMember(@RequestBody Member member, HttpServletRequest req) throws URISyntaxException {
         Long id;
@@ -35,7 +37,7 @@ public class MemberController {
         }
     }
 
-    @ApiOperation("update member")
+    @ApiOperation(value = "update member")
     @PutMapping
     public ServiceResponse<Member> updateMember(@RequestBody Member member) throws URISyntaxException {
         Optional<Member> newMember;
@@ -50,7 +52,7 @@ public class MemberController {
         return new ServiceResponse<>(newMember.get());
     }
 
-    @ApiOperation("delete member by id")
+    @ApiOperation(value = "delete member by id")
     @DeleteMapping("/{id}")
     public ServiceResponse<Object> deleteMember(@PathVariable Long id) {
         boolean delete;
@@ -65,7 +67,7 @@ public class MemberController {
         return new ServiceResponse<>();
     }
 
-    @ApiOperation("get member by id")
+    @ApiOperation(value = "get member by id")
     @GetMapping("/id/{id}")
     public ServiceResponse<Member> getMember(@PathVariable("id") Long id) {
         Optional<Member> member;
@@ -80,7 +82,7 @@ public class MemberController {
         return new ServiceResponse<>(member.get());
     }
 
-    @ApiOperation("get member by email")
+    @ApiOperation(value = "get member by email")
     @GetMapping("/email/{email}")
     public ServiceResponse<Member> getMemberByEmail(@PathVariable("email") String email) {
         Optional<Member> member;
@@ -95,7 +97,7 @@ public class MemberController {
         return new ServiceResponse<>(member.get());
     }
 
-    @ApiOperation("get member by phone")
+    @ApiOperation(value = "get member by phone")
     @GetMapping("/phone/{phone}")
     public ServiceResponse<Member> getMemberByPhone(@PathVariable("phone") String phone) {
         Optional<Member> member;
@@ -110,7 +112,7 @@ public class MemberController {
         return new ServiceResponse<>(member.get());
     }
 
-    @ApiOperation("get member by weChat")
+    @ApiOperation(value = "get member by weChat")
     @GetMapping("/wechat/{wechat}")
     public ServiceResponse<Member> getMemberByWechat(@PathVariable("wechat") String wechat) {
         Optional<Member> member;
@@ -125,7 +127,7 @@ public class MemberController {
         return new ServiceResponse<>(member.get());
     }
 
-    @ApiOperation("get member by stdId")
+    @ApiOperation(value = "get member by stdId")
     @GetMapping("/stdid/{stdid}")
     public ServiceResponse<Member> getMemberByStdId(@PathVariable("stdid") String stdId) {
         Optional<Member> member;
@@ -140,7 +142,7 @@ public class MemberController {
         return new ServiceResponse<>(member.get());
     }
 
-    @ApiOperation("list all members")
+    @ApiOperation(value = "list all members")
     @GetMapping("/")
     public ServiceResponse<List<Member>> getAll() {
         return new ServiceResponse<>(memberService.findAll());
