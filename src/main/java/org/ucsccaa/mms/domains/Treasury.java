@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -23,6 +24,6 @@ public class Treasury {
 
     @CreationTimestamp
     private LocalDateTime timestamp;
-    private long amount;
+    private Double amount;
     private String comment;
 }

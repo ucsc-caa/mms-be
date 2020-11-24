@@ -23,6 +23,9 @@ public class TreasuryService {
         if (treasury == null) {
             throw new IllegalArgumentException("Treasury cannot be null");
         }
+        if (treasury.getId() != null) {
+            throw new IllegalArgumentException("Treasury ID cannot be predefined");
+        }
         return treasuryRepository.save(treasury).getId();
     }
 

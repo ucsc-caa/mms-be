@@ -30,7 +30,7 @@ public class TreasuryServiceTest {
 
     @Test
     public void addTreasuryTest() {
-        Treasury expectedTreasury = new Treasury(1L, null, null, 100L, "test");
+        Treasury expectedTreasury = new Treasury(null, null, null, 100.00, "test");
         when(treasuryRepository.save(any())).thenReturn(expectedTreasury);
         Long id = treasuryService.addTreasury(expectedTreasury);
         Assert.assertEquals(expectedTreasury.getId(), id);
@@ -43,11 +43,12 @@ public class TreasuryServiceTest {
 
     @Test
     public void updateTreasuryTest() {
-        Treasury expectedTreasury = new Treasury(1L, null, null, 100L, "beforeUpdate");
+        Treasury expectedTreasury = new Treasury(null, null, null, 100.00, "beforeUpdate");
         when(treasuryRepository.save(any())).thenReturn(expectedTreasury);
         when(treasuryRepository.existsById(any())).thenReturn(true);
         treasuryService.addTreasury(expectedTreasury);
         expectedTreasury.setComment("afterUpdate");
+        expectedTreasury.setId(1L);
         Optional<Treasury> actualTreasury = treasuryService.updateTreasury(expectedTreasury);
         Assert.assertEquals(expectedTreasury.getComment(), actualTreasury.get().getComment());
     }
@@ -59,20 +60,20 @@ public class TreasuryServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void updateTreasuryNullIdTest() {
-        Treasury nullIdTreasury = new Treasury(null, null, null, 100L, "test");
+        Treasury nullIdTreasury = new Treasury(null, null, null, 100.00, "test");
         treasuryService.updateTreasury(nullIdTreasury);
     }
 
     @Test
     public void updateTreasuryNonExistingEntityTest() {
         when(treasuryRepository.existsById(any())).thenReturn(false);
-        Optional<Treasury> actualTreasury = treasuryService.updateTreasury(new Treasury(1L, null, null, 100L, "test"));
+        Optional<Treasury> actualTreasury = treasuryService.updateTreasury(new Treasury(1L, null, null, 100.00, "test"));
         Assert.assertFalse(actualTreasury.isPresent());
     }
 
     @Test
     public void getTreasuryTest() {
-        Treasury expectedTreasury = new Treasury(1L, null, null, 100L, "test");
+        Treasury expectedTreasury = new Treasury(null, null, null, 100.00, "test");
         when(treasuryRepository.save(any())).thenReturn(expectedTreasury);
         treasuryService.addTreasury(expectedTreasury);
         when(treasuryRepository.findById(any())).thenReturn(Optional.of(expectedTreasury));
@@ -99,7 +100,6 @@ public class TreasuryServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void getTreasuryByStaffNonExistingStaffTest() {
-        when(staffRepository.existsById(any())).thenReturn(false);
         treasuryService.getTreasuriesByStaff(1L);
     }
 

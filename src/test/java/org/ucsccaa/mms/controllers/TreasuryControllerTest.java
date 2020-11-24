@@ -38,7 +38,7 @@ public class TreasuryControllerTest {
     
     @InjectMocks
     private TreasuryController treasuryController;
-    private final Treasury expectedTreasury = new Treasury(1L, new Staff(), null, 100L, "test");
+    private final Treasury expectedTreasury = new Treasury(1L, new Staff(), null, 100.0, "test");
 
     @Before
     public void before() {
