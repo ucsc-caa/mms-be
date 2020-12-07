@@ -20,5 +20,5 @@ public class Item {
     private String status;
     private String name;
     private String comment;
-    private String price;
+    private Double price;
 }

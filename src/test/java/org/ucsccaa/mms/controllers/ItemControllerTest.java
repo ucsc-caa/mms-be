@@ -32,7 +32,7 @@ public class ItemControllerTest {
     private ItemService service;
     @InjectMocks
     private ItemController controller;
-    private final Item expectedItem = new Item((long)1, "status", "name", "comment", "price");
+    private final Item expectedItem = new Item((long)1, "status", "name", "comment", 1.0);
 
     @Before
     public void before() {
