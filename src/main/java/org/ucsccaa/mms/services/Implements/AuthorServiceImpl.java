@@ -13,7 +13,7 @@ import java.util.Optional;
 
 
 @Service
-public class AuthorServiceImp implements AuthorService {
+public class AuthorServiceImpl implements AuthorService {
     @Autowired
     AuthorizeRepository authorRepo;
     @PostConstruct
