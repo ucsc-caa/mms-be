@@ -16,6 +16,7 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <jackson.localtime.version>2.6.1</jackson.localtime.version>
     </properties>
 
     <dependencies>
@@ -55,6 +56,11 @@
             <artifactId>springfox-swagger-ui</artifactId>
             <version>2.9.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.localtime.version}</version>
+        </dependency>   
     </dependencies>
 
     <build>

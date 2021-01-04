@@ -19,15 +19,20 @@ import org.ucsccaa.mms.domains.Orders;
 import org.ucsccaa.mms.models.ServiceResponse;
 import org.ucsccaa.mms.models.Status;
 import org.ucsccaa.mms.services.OrderService;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 import org.springframework.web.bind.annotation.PutMapping;
 
-
+@Api(tags = "Order RESTful API")
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
     @Autowired
     private OrderService service;
     
+    @ApiOperation("Create new order")
     @PostMapping
     public ServiceResponse<URI> createOrder(@RequestBody Orders order, HttpServletRequest req) throws URISyntaxException {
         try {
@@ -38,19 +43,21 @@ public class OrderController {
         }
     }
 
+    @ApiOperation("Update order by ID")
     @PutMapping
-    public ServiceResponse<Orders> putMethodName(@RequestBody Orders order) {
+    public ServiceResponse<Orders> updateOrder(@RequestBody Orders order) {
         Orders updatedOrder = null;
         try {
             updatedOrder = service.updateOrder(order);
             if (updatedOrder == null) 
-                return new ServiceResponse<>(Status.NOT_FOUND, "ITEM NOT FOUND");
+                return new ServiceResponse<>(Status.NOT_FOUND, "ORDER NOT FOUND");
         } catch (Exception e) {
             return new ServiceResponse<>(Status.ERROR, e.getMessage());
         }
         return new ServiceResponse<>(updatedOrder);
     }
 
+    @ApiOperation("Get order by OrderID")
     @GetMapping("/{id}")
     public ServiceResponse<Orders> getOrderById(@PathVariable Long id) {
         Orders order = null;
@@ -64,12 +71,14 @@ public class OrderController {
         return new ServiceResponse<>(order);
     }
 
+    @ApiOperation("Get all orders")
     @GetMapping
     public ServiceResponse<List<Orders>> getAll() {
         List<Orders> all = service.getAll();
         return new ServiceResponse<>(all);
     }
 
+    @ApiOperation("Get orders by MemberID")
     @GetMapping("/_member")
     public ServiceResponse<List<Orders>> getOrderByMember(@RequestBody Member member) {
         List<Orders> list;
@@ -81,6 +90,7 @@ public class OrderController {
         return new ServiceResponse<>(list);
     }
 
+    @ApiOperation("Delete order by OrderID")
     @DeleteMapping("/{id}")
     public ServiceResponse<Object> cancelOrderById(@PathVariable Long id) {
         try {

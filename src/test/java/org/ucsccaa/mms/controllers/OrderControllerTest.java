@@ -36,7 +36,7 @@ public class OrderControllerTest {
     @InjectMocks
     private OrderController controller;
     private final Orders expectedOrder = 
-        new Orders((long)1, "status", "time", "item", (long)10, "price", "comment", new Member());
+        new Orders((long)1, "status", null, "item", (long)10, 10.0, "comment", new Member());
 
     @Before
     public void Before() {

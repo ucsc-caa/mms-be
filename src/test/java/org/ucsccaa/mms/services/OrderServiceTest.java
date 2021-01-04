@@ -24,7 +24,7 @@ import org.ucsccaa.mms.repositories.OrderRepository;
 @SpringBootTest(classes = MembershipManagementSystemApplication.class)
 public class OrderServiceTest {
     @Mock
-    private OrderRepository repository;
+    private OrderRepository orderRepository;
     @Mock
     private MemberRepository memberRepository;
     @InjectMocks
@@ -38,7 +38,7 @@ public class OrderServiceTest {
         member.setId((long)1);
         expectedOrder.setMember(member);
         when(memberRepository.existsById(anyLong())).thenReturn(true);
-        when(repository.save(any())).thenReturn(expectedOrder);
+        when(orderRepository.save(any())).thenReturn(expectedOrder);
         Long id = service.createOrder(expectedOrder);
         assertEquals(expectedOrder.getId(), id);
     }
@@ -68,9 +68,9 @@ public class OrderServiceTest {
         member.setId((long)1);
         expectedOrder.setMember(member);
 
-        when(repository.existsById(anyLong())).thenReturn(true);
+        when(orderRepository.existsById(anyLong())).thenReturn(true);
         when(memberRepository.existsById(anyLong())).thenReturn(true);
-        when(repository.save(any())).thenReturn(expectedOrder);
+        when(orderRepository.save(any())).thenReturn(expectedOrder);
         Orders order = service.updateOrder(expectedOrder);
         assertNotNull(order);
         assertEquals(expectedOrder.getId(), order.getId());
@@ -82,7 +82,7 @@ public class OrderServiceTest {
         Orders expectOrder = new Orders();
         expectOrder.setId((long)1);
 
-        when(repository.findById(expectOrder.getId())).thenReturn(Optional.of(expectOrder));
+        when(orderRepository.findById(expectOrder.getId())).thenReturn(Optional.of(expectOrder));
         Orders item = service.getOrderById(expectOrder.getId());
         assertEquals(expectOrder.getId(), item.getId());
     }
@@ -94,14 +94,14 @@ public class OrderServiceTest {
 
     @Test
     public void deleteByIdTest() {
-        when(repository.findById(anyLong())).thenReturn(Optional.of(new Orders()));
+        when(orderRepository.findById(anyLong())).thenReturn(Optional.of(new Orders()));
         boolean result = service.deleteById((long)1);
         assertEquals(true, result);
     }
 
     @Test
     public void deleteByIdNotFoundTest() {
-        when(repository.findById(anyLong())).thenReturn(Optional.empty());
+        when(orderRepository.findById(anyLong())).thenReturn(Optional.empty());
         boolean result = service.deleteById((long)1);
         assertEquals(false, result);
     }

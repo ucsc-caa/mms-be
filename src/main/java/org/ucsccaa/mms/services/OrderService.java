@@ -13,7 +13,7 @@ import org.ucsccaa.mms.repositories.OrderRepository;
 @Service
 public class OrderService {
     @Autowired
-    private OrderRepository repo;
+    private OrderRepository orderRepository;
     @Autowired
     private MemberRepository memberRepository;
 
@@ -25,7 +25,7 @@ public class OrderService {
             throw new RuntimeException("MEMBER ID CANNOT BE NULL");
         if (!memberRepository.existsById(memberId))
             throw new RuntimeException("MEMBER ID NOT EXISTS");
-        return repo.save(order).getId();
+        return orderRepository.save(order).getId();
     }
 
     public Orders updateOrder(Orders order) {
@@ -36,32 +36,32 @@ public class OrderService {
             throw new RuntimeException("MEMBER ID CANNOT BE NULL");
         if (!memberRepository.existsById(memberId))
             throw new RuntimeException("MEMBER ID NOT EXISTS");
-        return repo.existsById(order.getId()) ? repo.save(order) : null;
+        return orderRepository.existsById(order.getId()) ? orderRepository.save(order) : null;
     }
 
     public Orders getOrderById(Long id) {
         if (id == null) 
             throw new RuntimeException("ID CANNOT BE NULL");
-        Optional<Orders> order = repo.findById(id);
+        Optional<Orders> order = orderRepository.findById(id);
         return order.isPresent() ? order.get() : null;
     }
 
     public List<Orders> getAll() {
-        return repo.findAll();
+        return orderRepository.findAll();
     }
 
     public List<Orders> getOrderByMember(Member member) {
         if (member == null) 
             throw new RuntimeException("MEMBER CANNOT BE NULL");
-        return repo.findByMember(member);
+        return orderRepository.findByMember(member);
     }
 
     public Boolean deleteById(Long id) {
         if (id == null) 
             throw new RuntimeException("ID CANNOT BE NULL");
-        Optional<Orders> order = repo.findById(id);
+        Optional<Orders> order = orderRepository.findById(id);
         if (order.isPresent()) {
-            repo.delete(order.get());
+            orderRepository.delete(order.get());
             return true;
         }
         return false;
