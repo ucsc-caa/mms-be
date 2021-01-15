@@ -8,41 +8,47 @@ import org.ucsccaa.mms.controllers.AuthenticationController;
 import org.ucsccaa.mms.domains.UserDetails;
 import org.ucsccaa.mms.models.ServiceResponse;
 import org.ucsccaa.mms.models.Status;
-import org.ucsccaa.mms.repositories.UserDetailsRepository;
 import org.ucsccaa.mms.services.impl.AuthenticationServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URI;
 import java.net.URISyntaxException;
 
 @Api(tags = "Authentication RESTFUL API")
 @RestController
 @RequestMapping("/authentications")
 public class AuthenticationControllerImpl implements AuthenticationController {
+
     @Autowired
     private AuthenticationServiceImpl authenticationServiceImpl;
-    private UserDetailsRepository userDetailsRepository;
+
     @ApiOperation("create new jwt")
     @Override
-    @PostMapping
-    public ServiceResponse<?> createJwt(@RequestBody UserDetails userDetails) {
+    @PostMapping("/{username}/{password}")
+    public ServiceResponse<?> createJwt(@PathVariable String username, @PathVariable String password) {
+        UserDetails userDetails;
         try {
-            authenticationServiceImpl.authenticate(userDetails);
+            userDetails = authenticationServiceImpl.authenticate(username, password);
         } catch (Exception e) {
             return new ServiceResponse<>(Status.ERROR, e.getMessage());
         }
         String token;
         try {
-           token = authenticationServiceImpl.generateJwtToken(userDetails);
+           token = authenticationServiceImpl.generateToken(userDetails);
         } catch (Exception e) {
             return  new ServiceResponse<>(Status.ERROR, e.getMessage());
         }
         return new ServiceResponse<>(token);
     }
 
-    @Override
     @PostMapping("/createUserDetail")
-    public ServiceResponse<UserDetails> createUserDetail(@RequestBody UserDetails userDetails, HttpServletRequest req) throws URISyntaxException {
-        userDetailsRepository.save(userDetails);
-        return new ServiceResponse<>(userDetails);
+    public ServiceResponse<URI> createUserDetail(@RequestBody UserDetails userDetails, HttpServletRequest req) throws URISyntaxException {
+        Long id;
+        try {
+            id = authenticationServiceImpl.addUserDetail(userDetails);
+            return new ServiceResponse<>(new URI(req.getRequestURL() + "/" + id));
+        } catch (Exception e) {
+            return new ServiceResponse<>(Status.ERROR, e.getMessage());
+        }
     }
 }

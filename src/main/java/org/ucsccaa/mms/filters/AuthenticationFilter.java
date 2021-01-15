@@ -32,7 +32,7 @@ public class AuthenticationFilter implements Filter {
         System.out.println(authHead.substring(0,6));
         System.out.println(authHead);
         try {
-            if (authHead == null || !"Bearer".equals(authHead.substring(0, 6)) || authenticationService.validateJwtToken(authHead.substring(6))) {
+            if (authHead == null || !"Bearer".equals(authHead.substring(0, 6)) || authenticationService.validateToken(authHead.substring(6))) {
                 httpServletResponse.sendError(500, "INVALID TOKEN");
                 return;
             }
