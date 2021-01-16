@@ -24,8 +24,7 @@ public class UserDetails {
     @JoinColumn(name = "staff_id", referencedColumnName = "id")
     private Staff staff;
 
-    static void defaultUserDetails() {
-        UserDetails userDetails = new UserDetails();
+    static void defaultUserDetails(UserDetails userDetails) {
         userDetails.setUserName(String.valueOf((int)((Math.random() * 9+1) * (Math.pow(10, 4)))));
         userDetails.setPassword(String.valueOf((int)((Math.random() * 9+1) * (Math.pow(10, 7)))));
     }
