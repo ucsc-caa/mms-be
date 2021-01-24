@@ -16,7 +16,7 @@ import java.net.URISyntaxException;
 
 @Api(tags = "Authentication RESTFUL API")
 @RestController
-@RequestMapping("/authentications")
+
 public class AuthenticationControllerImpl implements AuthenticationController {
 
     @Autowired
@@ -24,7 +24,8 @@ public class AuthenticationControllerImpl implements AuthenticationController {
 
     @ApiOperation("create new jwt")
     @Override
-    @PostMapping("/{username}/{password}")
+
+    @PostMapping("/authenticate")
     public ServiceResponse<?> createJwt(@PathVariable String username, @PathVariable String password) {
         UserDetails userDetails;
         try {

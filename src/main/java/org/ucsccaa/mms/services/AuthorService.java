@@ -1,9 +1,8 @@
 package org.ucsccaa.mms.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.ucsccaa.mms.repositories.AuthorizeRepository;
+
+import org.ucsccaa.mms.domains.Authorization;
 
 public interface AuthorService {
-    Boolean checkAuthority(String level, String... authority);
+    Boolean checkAuthority(String level, String method, String uri);
 }
