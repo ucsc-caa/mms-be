@@ -27,8 +27,12 @@ public class AuthenticationServiceTest {
     @InjectMocks
     private AuthenticationServiceImpl authenticationService;
 
-    private ArrayList<Authorization.Authorities> authorList = new ArrayList<Authorization.Authorities>();
-    private final Authorization authorization = new Authorization(1L, Authorization.LEVEL.LEVEL_1, authorList);
+    private Set<Authorization.Authority_GET> authority_gets = new HashSet<>();
+    private Set<Authorization.Authority_POST> authority_posts = new HashSet<>();
+    private Set<Authorization.Authority_PUT> authority_puts = new HashSet<>();
+    private Set<Authorization.Authority_DELETE> authority_deletes = new HashSet<>();
+
+    private final Authorization authorization = new Authorization(Authorization.LEVEL.LEVEL_1, authority_gets, authority_puts, authority_posts, authority_deletes);
     private final Member member = new Member(1L,"test","test","test","test",
             "test","test","test","test","test","test","test",
             "test","test","test","test","test","test","test","test",

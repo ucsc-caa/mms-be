@@ -4,7 +4,7 @@ import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Example;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.util.DigestUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.ucsccaa.mms.domains.UserDetails;
@@ -24,8 +24,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    @Value("${jwt.secret")
-    private String secretKey = "secret";
+    @Value("${secretkey}")
+    private String secretKey;
 
     @PostConstruct
     public void init() {
@@ -42,7 +42,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .setSubject(userDetails.getUserName())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 3600000)) // 1h
-                .claim("authority", level)
+                .claim("authorizationLevel", level)
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
