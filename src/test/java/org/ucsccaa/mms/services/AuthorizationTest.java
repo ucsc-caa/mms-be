@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.ucsccaa.mms.domains.Authorization;
 import org.ucsccaa.mms.repositories.AuthorizeRepository;
 import org.ucsccaa.mms.services.impl.AuthorizationServiceImpl;
@@ -44,6 +45,7 @@ public class AuthorizationTest {
 
     @Test
     public void testCheckAuthority() {
+        ReflectionTestUtils.invokeMethod(AuthorizationServiceImpl.class, "initializeAuthor");
         Boolean actualResult = authorService.checkAuthority(stringLevel, checkMethod, checkURI);
         Assert.assertEquals(expectedResult, actualResult);
     }

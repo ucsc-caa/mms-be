@@ -259,12 +259,12 @@ public class AuthorizationServiceImpl implements AuthorService {
         }
     }
 
-    public void addAuthority(String level, String authority) {
-        Authorization authorization = authorizationRepo.findByLevel(Authorization.LEVEL.valueOf(level));
+    public void addAuthority(Authorization.LEVEL level, String authority) {
         if (level == null) {
             throw new RuntimeException("level can't be NULL!");
         }
-        else if (authorization != null) {
+        Authorization authorization = authorizationRepo.findByLevel(level);
+        if (authorization != null) {
             if (authority.contains("READ") || authority.contains("GET")) {
                 authorization.getAuthoritySet_GET().add(Authorization.Authority_GET.valueOf(authority.toUpperCase()));
             } else if (authority.contains("EDIT") || authority.contains("PUT")) {
@@ -276,20 +276,8 @@ public class AuthorizationServiceImpl implements AuthorService {
             }
             authorizationRepo.save(authorization);
         } else {
-            Authorization.LEVEL checkLevel = authorization.getLevel();
-            if (checkLevel != null) {
-                authorization.setLevel(Authorization.LEVEL.valueOf(level));
-                if (authority.contains("READ") || authority.contains("GET")) {
-                    authorization.getAuthoritySet_GET().add(Authorization.Authority_GET.valueOf(authority.toUpperCase()));
-                } else if (authority.contains("EDIT") || authority.contains("PUT")) {
-                    authorization.getAuthoritySet_PUT().add(Authorization.Authority_PUT.valueOf(authority.toUpperCase()));
-                } else if (authority.contains("ADD") || authority.contains("POST")) {
-                    authorization.getAuthoritySet_POST().add(Authorization.Authority_POST.valueOf(authority.toUpperCase()));
-                } else {
-                    authorization.getAuthoritySet_DELETE().add(Authorization.Authority_DELETE.valueOf(authority.toUpperCase()));
-                }
-                authorizationRepo.save(authorization);
-            }
+            throw new RuntimeException("level is Invalid!");
+
         }
     }
 

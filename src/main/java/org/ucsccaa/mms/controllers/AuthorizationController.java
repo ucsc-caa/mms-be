@@ -20,13 +20,13 @@ public class AuthorizationController {
     @Autowired
     private AuthorService authorService;
     
-//    @PostMapping
-//    public ServiceResponse<URI> createAuthorization(@RequestBody Authorization authorization, HttpServletRequest req) throws URISyntaxException {
-//        try {
-//            authorService.createAuthorization(authorization);
-//            return new ServiceResponse<>(new URI(req.getRequestURI() + "/" + authorization.getLevel().toString()));
-//        } catch (Exception e) {
-//            return new ServiceResponse<>(Status.ERROR, e.getMessage());
-//        }
-//    }
+    @PostMapping
+    public ServiceResponse<URI> addAuthority(@RequestBody String level, @RequestBody String authority, HttpServletRequest req) throws URISyntaxException {
+        try {
+            authorService.addAuthority(Authorization.LEVEL.valueOf(level), authority);
+            return new ServiceResponse<>(new URI(req.getRequestURI() + "/" + level + "/" + authority));
+        } catch (Exception e) {
+            return new ServiceResponse<>(Status.ERROR, e.getMessage());
+        }
+    }
 }
