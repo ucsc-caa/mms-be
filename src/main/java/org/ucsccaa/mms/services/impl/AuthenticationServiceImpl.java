@@ -60,7 +60,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (token == null) {
             return null;
         }
-        String level = (String) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("authority");
+        String level = (String) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("authorizationLevel");
         return level;
     }
 

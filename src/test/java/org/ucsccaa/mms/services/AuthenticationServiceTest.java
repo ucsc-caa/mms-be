@@ -6,11 +6,13 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.ucsccaa.mms.domains.Member;
 import org.ucsccaa.mms.domains.Staff;
 import org.ucsccaa.mms.domains.UserDetails;
@@ -40,6 +42,10 @@ public class AuthenticationServiceTest {
     private final Staff staff = new Staff(1L, "test", "test", authorization, member);
     private final UserDetails expectedUser = new UserDetails(1L, "test", "test","[B@ebaa6cb".getBytes() ,staff);
 
+    @Before
+    public void before() {
+        ReflectionTestUtils.setField(authenticationService, "secretKey", "secret");
+    }
     @Test
     public void testGenerateToken() {
         String token = authenticationService.generateToken(expectedUser);
